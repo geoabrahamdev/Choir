@@ -1,0 +1,103 @@
+/*
+ * Choir — global dark theme. §7 palette.
+ * No pure white, no pure black. Cool bias.
+ */
+:root {
+  --bg: #05070c;
+  --node-base: #e8edf5;
+  --accent-1: #4fc3f7;
+  --accent-2: #6ea8fe;
+  --coherence: #a78bfa;
+  --warning: #f5b358;
+  --text: #e8edf5;
+  --text-muted: rgba(232, 237, 245, 0.55);
+  --hud-bg: rgba(5, 7, 12, 0.55);
+  --hud-border: rgba(232, 237, 245, 0.08);
+  --mono: ui-monospace, Menlo, Consolas, monospace;
+  --sans: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#three {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+}
+
+#hud {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  padding: 10px 14px;
+  background: var(--hud-bg);
+  border: 1px solid var(--hud-border);
+  border-radius: 10px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text);
+  min-width: 180px;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: 0.02em;
+}
+
+#hud .row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+#hud .label {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+#hud .val {
+  font-family: var(--mono);
+  color: var(--text);
+}
+
+#hud .val.coherence {
+  color: var(--coherence);
+}
+
+#caption {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  pointer-events: none;
+  user-select: none;
+  text-align: center;
+  max-width: 80vw;
+}
+
+#caption.visible { opacity: 1; }
