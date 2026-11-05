@@ -31,3 +31,11 @@ Started the initial public release at `geoabrahamdev/Choir`. Repaired the malfor
 lockfile, made lint cross-platform, added the live Pages URL to README, and created the
 0.1.0 changelog. Fresh verification: `npm ci`, `npm run bake`, 18/18 tests, build, and lint
 all pass. Created an empty `main` base and prepared `feat/initial-m1` for the release PR.
+
+## 2026-11-05T16:44:51Z — codex
+Merged release PR #1 as `9a020b2f1f66effa884fbe3a946641c843fef9f8`, enabled GitHub
+Pages in workflow mode, and verified Actions run `42066902475` passed bake, lint, tests,
+build, and deploy. Production smoke test confirmed the page and all assets return 200,
+150 peers render at ~131 FPS, and coherence remains around 71%. Live Lighthouse scored
+85 performance, 100 accessibility, and 100 best practices. The preview is deployed; the
+80% stable-coherence/wave acceptance gate remains explicit follow-up work.
