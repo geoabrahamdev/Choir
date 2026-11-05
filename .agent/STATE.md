@@ -31,15 +31,18 @@ status: in_progress
 - M1.22 index.html — canvas + HUD + caption, dark theme.
 - Deployment workflow (.github/workflows/deploy.yml) + README.md with mandatory §0 disclaimer + MIT LICENSE.
 - Local types shim for d3-force-3d (no @types/d3-force-3d published).
-- M1 ACCEPTANCE VERIFIED LOCALLY:
+- M1 RELEASE TOOLING VERIFIED LOCALLY:
     * `npx vitest run` → 18/18 tests pass.
     * `npx tsc --noEmit` → clean.
     * `npx vite build` → 538 KB raw / 139.77 KB gzipped (target <500 KB gzipped; §17 trap #6 passes).
     * `npx vite preview` → serves index.html 200 OK and trajectories.bin 200 OK at ~10 MB.
     * No forbidden §0 words in src/ UI; README mentions them only in the mandated "This is not a consciousness experiment" disclaimer per §16.
+- M1 ACCEPTANCE GAPS:
+    * Normal browser runs begin around 59% coherence and settle around 72%, below the intended 80% threshold.
+    * The coherence wave implementation exists, but normal runs do not reliably reach its trigger.
+    * Best measured local Lighthouse performance score is 83, below the plan target of 85.
 
 ## Pending tasks (this milestone)
-- Create the public `geoabrahamdev/Choir` repository.
 - Push the M1 implementation through a feature PR and merge it to `main`.
 - Enable GitHub Pages, wait for the deploy workflow, and verify the live URL.
 

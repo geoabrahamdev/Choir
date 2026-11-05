@@ -47,7 +47,7 @@ CHOIR_BASE=/ npm run preview
 
 ## Roadmap
 
-- **M1** *(this release)*: single-tab swarm with faked latent states. Converges in 30–60 s and plays a wave.
+- **M1** *(this preview)*: single-tab swarm with pre-baked latent states, local gossip, and the 3D visualization. The current build reaches roughly 72% steady-state coherence in normal runs, so the intended 80% wave threshold remains follow-up work.
 - **M2**: visual polish — fresnel glow, starfield, auto-orbit, bloom tune.
 - **M3**: real peer-to-peer over WebRTC — open the demo on two devices and watch them actually find each other.
 - **M4** *(optional)*: opt-in real LLM inference in the browser via WebLLM.
