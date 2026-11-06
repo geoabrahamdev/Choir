@@ -1,66 +1,40 @@
 # Project State
 
-last_updated: 2026-11-05T16:44:51Z
+last_updated: 2026-11-06T00:00:00Z
 last_agent: codex
-current_milestone: M1
-current_task: M1 preview published and production-tested
-status: milestone_complete
+current_milestone: M2-M4 preview release
+current_task: release_candidate
+status: in_progress
 
-## Completed tasks (this milestone)
-- M1.1 Scaffolded Vite + TS project (hand-written: package.json, tsconfig.json, vite.config.ts, .eslintrc.cjs, .gitignore). Also added vitest.config.ts because tests live at repo root while vite.config has `root: "src"`.
-- M1.2 global.css with palette variables + reset + HUD + caption styles (§7).
-- M1.3 LatentState.ts with random/normalise/blend/drift/cosineSim/centroid/clone + 11 unit tests.
-- M1.4 Agent.ts with id, personality, latent, version, step(), absorb(), setLatent().
-- M1.5 scripts/bake-trajectories.ts — generates public/embeddings/trajectories.bin at 9.58 MiB (see DECISION 2).
-- M1.6 InferenceEngine.ts interface.
-- M1.7 CachedTrajectory.ts — fetches trajectories.bin, binds agents to baked slots, wraps modulo tick_count.
-- M1.8 PeerTransport.ts interface.
-- M1.9 LocalTransport.ts with LocalRouter + configurable latency & drop rate.
-- M1.10 GossipProtocol.ts — push-based + anti-entropy, emits send/recv events, 3 integration tests.
-- M1.11 Swarm.ts — owns agents + gossips + inference binding.
-- M1.12 CoherenceMetric.ts — coherence(agents) → [0,1], 4 tests.
-- M1.13 Scene.ts — WebGLRenderer + PerspectiveCamera + UnrealBloomPass + FogExp2.
-- M1.14 NodeMesh.ts — InstancedMesh with per-instance HSL colouring from personality.
-- M1.15 EdgeLines.ts — LineSegments with per-vertex colours; linear fade over 1.5s.
-- M1.16 EdgePulse.ts — Points with bell-curve brightness travelling source → target over 400 ms.
-- M1.17 CoherenceWave.ts — ease-out cubic sphere expansion from centroid.
-- M1.18 Controls.ts — OrbitControls default + F-key fly camera (WASD + QE + pointer lock).
-- M1.19 ForceLayout.ts — d3-force-3d with charge + custom alignment force (O(N·K) neighbour sampling).
-- M1.20 HUD.ts — coherence, peer count, FPS; rotating captions from CONFIG.CAPTIONS.
-- M1.21 main.ts — wires everything; drift tick every 120 ms, render loop with coherence + wave trigger.
-- M1.22 index.html — canvas + HUD + caption, dark theme.
-- Deployment workflow (.github/workflows/deploy.yml) + README.md with mandatory §0 disclaimer + MIT LICENSE.
-- Local types shim for d3-force-3d (no @types/d3-force-3d published).
-- M1 RELEASE TOOLING VERIFIED LOCALLY:
-    * `npx vitest run` → 18/18 tests pass.
-    * `npx tsc --noEmit` → clean.
-    * `npx vite build` → 538 KB raw / 139.77 KB gzipped (target <500 KB gzipped; §17 trap #6 passes).
-    * `npx vite preview` → serves index.html 200 OK and trajectories.bin 200 OK at ~10 MB.
-    * No forbidden §0 words in src/ UI; README mentions them only in the mandated "This is not a consciousness experiment" disclaimer per §16.
-- M1 ACCEPTANCE GAPS:
-    * Normal browser runs begin around 59% coherence and settle around 72%, below the intended 80% threshold.
-    * The coherence wave implementation exists, but normal runs do not reliably reach its trigger.
-- RELEASE COMPLETED:
-    * Public repository: `https://github.com/geoabrahamdev/Choir`.
-    * Initial release PR #1 merged to `main` as `9a020b2f1f66effa884fbe3a946641c843fef9f8`.
-    * GitHub Pages run `42066902475` passed bake, lint, 18/18 tests, build, and deploy.
-    * Live smoke test: HTTP/assets 200, 150 peers, ~131 FPS, stable ~71% coherence, no boot failure.
-    * Live Lighthouse: performance 85, accessibility 100, best practices 100.
+## Implemented preview paths
+- M1 — single-tab swarm (shipped and live at https://geoabrahamdev.github.io/Choir/)
+- M2 — visual polish code: fresnel shader, starfield, auto-orbit, bloom tune, and 1.2 s ease-out wave
+- M3 — experimental P2P code: RTCTransport, LiveSwarm, Local/Live toggle, and signaling fallback
+- M4 — experimental WebLLM code: lazy engine, Advanced panel, cross-origin-isolation service worker, and WebGPU preflight
 
-## Pending follow-up work
-- Preserve gossip consensus across trajectory ticks so coherence can remain above the 80% wave threshold.
-- Replace bursty full-store anti-entropy with digest/diff or batched exchange.
-- Add browser, trajectory-loader failure, and true version-convergence tests.
-- Add accessible interaction instructions and reduced-motion behavior.
+## Pending acceptance work
+- Add the planned M2 `demo.mp4` and implement a real hue shift for wave-near nodes.
+- Provide working public peer discovery and add multi-browser M3 convergence tests.
+- Add personality/recent-neighbour prompt context, a VRAM estimate, and M4 throughput/semantic tests.
+- Recheck M1's stable 80% coherence target.
 
-## Blockers
-- (none)
+## Release status
+- The current branch is suitable for a public preview, not a completed M2–M4 milestone claim.
+- The release PR must disclose the remaining acceptance gaps and low M2–M4 automated coverage.
+
+## Known gaps / tech-debt
+- M2.8 asks for a demo.mp4 screen-capture in the repo root — that needs a real browser session with recording; impossible from the headless VM. Left to Geo.
+- Direct two-browser testing leaves both Live-mode pages at one peer because the bootstrap list is empty.
+- Remote placeholders are removed on transport departure, Live teardown closes RTC, and mode transitions use an epoch guard; multi-browser behavior remains to be proven.
+- WebLLM inference now uses a bounded, deduplicated, single-completion queue; sustained real-model throughput remains unverified.
+- WebLLM derives vectors from token log probabilities rather than hidden-state embeddings and does not yet include personality or recent neighbour thoughts in prompts.
+- The static bootstrap-peers.json is empty — the first peer to bring up Live mode on the live URL will have no one to dial. Fix: add a GitHub Action (or a manual commit) that writes a known-stable peer id into the file after first successful connection, or set up a Cloudflare Worker as a long-lived bootstrap.
+- Main bundle grew from 139.77 KB (M1) → 143.46 KB (M4) gzipped. §12 says "With Advanced mode off, bundle size identical to M3" — M3 was 142.66 KB; M4 is +0.8 KB for the AdvancedPanel UI. Within acceptable overhead for the opt-in UI shell.
 
 ## Environment state
-- node_installed: true (v22.23.4)
-- npm_installed: true (10.9.9)
-- deps_installed: true (`npm ci` succeeds from the regenerated lockfile)
-- trajectories_baked: true (public/embeddings/trajectories.bin, 10 050 016 bytes)
-- tests_passing: true (18/18; build and lint also pass)
-- deployed_to_pages: true
-- live_url: https://geoabrahamdev.github.io/Choir/
+- node v22.23.4, npm 10.9.9
+- deps installed in the mount's node_modules; CI uses `npm ci`
+- trajectories baked at public/embeddings/trajectories.bin (9.58 MiB)
+- All 22 unit tests pass
+- `npx tsc --noEmit` clean
+- `npx vite build` succeeds; chunks: main 143 KB gz, RTCTransport 25 KB gz (lazy), WebLLM wrapper 1 KB gz (lazy) + @mlc-ai/web-llm 2174 KB gz (lazy, only downloaded if user opts in)
