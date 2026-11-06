@@ -1,0 +1,4 @@
+{
+  "comment": "Seed peer IDs for Choir's P2P discovery. Each entry is a PeerJS peer ID known to be (or have been) online. Keep ~3-5. Update manually or via a GitHub Action after deploys. Clients merge this with localStorage.",
+  "peers": []
+}

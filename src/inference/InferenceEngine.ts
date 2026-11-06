@@ -25,4 +25,7 @@ export interface InferenceEngine {
 
   /** Agent-indexable count supported by this engine. */
   readonly agentCapacity: number;
+
+  /** Optional permanent cleanup for engines with workers/GPU resources. */
+  dispose?(): void;
 }

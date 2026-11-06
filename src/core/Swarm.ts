@@ -74,7 +74,7 @@ export class Swarm {
   }
 
   stop(): void {
-    for (const g of this.gossips) g.stop();
+    for (const g of this.gossips) g.dispose();
   }
 
   /** One global tick: advance all agents' intrinsic drift. */

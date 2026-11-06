@@ -14,6 +14,14 @@
       <div class="row"><span class="label">coherence</span><span class="val coherence" id="hud-coherence">0.00</span></div>
       <div class="row"><span class="label">peers</span><span class="val" id="hud-peers">0</span></div>
       <div class="row"><span class="label">fps</span><span class="val" id="hud-fps">—</span></div>
+      <div class="row mode-row">
+        <span class="label">mode</span>
+        <span class="mode-group">
+          <button type="button" id="hud-mode-local" class="mode-btn">local</button>
+          <button type="button" id="hud-mode-live" class="mode-btn">live</button>
+        </span>
+      </div>
+      <div class="note" id="hud-note" role="status"></div>
     </div>
     <div id="caption"></div>
     <script type="module" src="./app/main.ts"></script>

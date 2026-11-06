@@ -58,6 +58,11 @@ export class EdgeLines {
     this.edges.push({ from: fromIdx, to: toIdx, startMs: nowMs });
   }
 
+  clear(): void {
+    this.edges = [];
+    this.geometry.setDrawRange(0, 0);
+  }
+
   /**
    * Rebuild the visible edge list from positions + current time.
    * Expired edges are dropped. Call once per frame.
