@@ -61,6 +61,11 @@ export class EdgePulse {
     this.pulses.push({ from: fromIdx, to: toIdx, startMs: nowMs });
   }
 
+  clear(): void {
+    this.pulses = [];
+    this.geometry.setDrawRange(0, 0);
+  }
+
   update(nowMs: number, nodes: readonly NodePosition[]): void {
     const kept: ActivePulse[] = [];
     const posAttr = this.geometry.getAttribute("position") as BufferAttribute;

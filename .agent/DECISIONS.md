@@ -34,3 +34,21 @@ Format:
 **Decision:** Hand-write a minimal ambient module declaration at src/types/d3-force-3d.d.ts covering only the surface used by ForceLayout: forceSimulation, forceManyBody, forceCenter, Simulation.alpha/alphaDecay/velocityDecay/force/tick/stop, and SimulationNode.
 **Alternatives considered:** `declare module 'd3-force-3d';` (untyped `any`); fork the upstream types.
 **Consequences:** Type-check stays strict. If we start using more of d3-force-3d (e.g. link force, collide force — already stubbed), just extend this file.
+
+### 5. Bootstrap list over rendezvous peer — 2026-11-05 — claude
+**Context:** §11 offers two signaling strategies: a known rendezvous peer that acts as a tiny directory, or a static bootstrap-peers.json served from GitHub Pages plus localStorage caching.
+**Decision:** Chose the bootstrap-peers.json + localStorage approach. The file lives at public/bootstrap-peers.json and starts empty.
+**Alternatives considered:** A hardcoded rendezvous peer would centralise discovery on whichever tab is running at that id — brittle, and a single point of failure for a project whose point is being decentralised. A Cloudflare Worker running peerjs-server is the right production fix; deferred until PeerJS rate-limits bite.
+**Consequences:** Cold start on a quiet URL discovers nobody. Fix: once a stable instance exists, add its id to bootstrap-peers.json. localStorage then carries forward across visits. RTCTransport is the only file that knows the signaling endpoint — swap is a one-file change.
+
+### 6. Lazy-load RTCTransport and WebLLMEngine — 2026-11-05 — claude
+**Context:** PeerJS pulls ~25 KB gz; @mlc-ai/web-llm is 2 MB gz + a 500 MB-2 GB model download. Local-mode users and non-Advanced users shouldn't pay those costs.
+**Decision:** Both are imported via dynamic `import()` only when the user flips the HUD toggle / clicks "advanced → on". Main bundle stays at 143 KB gz regardless.
+**Alternatives considered:** Eager import with tree-shaking (wouldn't help; Peer is a side-effectful module); split via manualChunks (equivalent but more config).
+**Consequences:** First Live-mode click costs an extra ~25 KB network round-trip. First Advanced-mode click costs ~500 MB model download — explicitly disclosed in the Advanced panel before confirming.
+
+### 7. @mlc-ai/web-llm in optionalDependencies — 2026-11-05 — claude
+**Context:** M4 is explicitly optional per §12. Users who clone Choir shouldn't have a 14 MB install dependency they can't use if they don't have WebGPU.
+**Decision:** Put @mlc-ai/web-llm in optionalDependencies and have WebLLMEngine's dynamic import catch "module not found" and throw a friendly error that the Advanced panel surfaces to the user.
+**Alternatives considered:** Regular dependency (forces install cost on everyone); peerDependency (cleaner npm semantics but worse UX — npm install succeeds silently with an uninstalled peer).
+**Consequences:** `npm ci` by default WILL install @mlc-ai/web-llm (optionalDependencies are installed unless they fail to build). Setting `npm ci --omit=optional` skips it. CI could use that to keep the deploy slim if Advanced-mode functionality isn't exercised on the deployed URL.

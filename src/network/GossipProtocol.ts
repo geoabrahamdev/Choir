@@ -53,6 +53,7 @@ export class GossipProtocol {
   private opts: Required<GossipOptions>;
   /** Bound transport msg handler, so we can detach cleanly. */
   private inboundBound: (msg: GossipMessage, via: string) => void;
+  private unsubscribeInbound: () => void;
 
   constructor(
     private readonly agent: Agent,
@@ -67,7 +68,7 @@ export class GossipProtocol {
       rng: opts.rng ?? Math.random
     };
     this.inboundBound = (msg, via) => this.onInbound(msg, via);
-    this.transport.onMessage(this.inboundBound);
+    this.unsubscribeInbound = this.transport.onMessage(this.inboundBound);
   }
 
   on(cb: GossipEventHandler): void {
@@ -96,6 +97,12 @@ export class GossipProtocol {
       clearInterval(this.antiEntropyTimer);
       this.antiEntropyTimer = null;
     }
+  }
+
+  /** Stop permanently and detach the transport callback. */
+  dispose(): void {
+    this.stop();
+    this.unsubscribeInbound();
   }
 
   /** Expose the local store to Swarm / tests. Read-only view. */

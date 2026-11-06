@@ -56,6 +56,13 @@ class LocalRouter {
     list.push(cb);
   }
 
+  unlisten(id: string, cb: MessageHandler): void {
+    const list = this.handlers.get(id);
+    if (!list) return;
+    const idx = list.indexOf(cb);
+    if (idx >= 0) list.splice(idx, 1);
+  }
+
   send(fromId: string, toId: string, msg: GossipMessage): void {
     if (!this.handlers.has(toId)) return; // target gone
     // Drop?
@@ -90,8 +97,9 @@ export class LocalTransport implements PeerTransport {
     this.router.send(this.id, toId, msg);
   }
 
-  onMessage(cb: MessageHandler): void {
+  onMessage(cb: MessageHandler): () => void {
     this.router.listen(this.id, cb);
+    return () => this.router.unlisten(this.id, cb);
   }
 
   peers(): string[] {
@@ -100,6 +108,10 @@ export class LocalTransport implements PeerTransport {
 
   localId(): string {
     return this.id;
+  }
+
+  close(): void {
+    this.router.unregister(this.id);
   }
 }
 

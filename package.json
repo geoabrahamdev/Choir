@@ -1,7 +1,7 @@
 {
   "name": "choir",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "description": "An interactive 3D metaphor for emergent coherence in a peer-to-peer swarm of software agents. Not a scientific claim.",
   "scripts": {
@@ -14,11 +14,14 @@
     "lint": "eslint src --ext .ts"
   },
   "dependencies": {
-    "@types/node": "^20.19.43",
     "d3-force-3d": "^3.0.5",
+    "peerjs": "^1.5.5",
+    "simple-peer": "^9.11.1",
     "three": "^0.162.0"
   },
   "devDependencies": {
+    "@types/node": "^20.19.43",
+    "@types/simple-peer": "^9.11.9",
     "@types/three": "^0.162.0",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
@@ -28,5 +31,8 @@
     "typescript": "^5.4.0",
     "vite": "^5.2.0",
     "vitest": "^1.4.0"
+  },
+  "optionalDependencies": {
+    "@mlc-ai/web-llm": "^0.2.87"
   }
 }
