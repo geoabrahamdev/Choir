@@ -95,3 +95,36 @@ Added four regression tests (22/22 total). Chrome production-build smoke testing
 150 Local nodes, one Live node, clean rapid Live→Local teardown, working cross-origin
 isolation/WebGPU/SharedArrayBuffer, and zero console/network failures. Public peer discovery
 still waits at one peer because the checked-in bootstrap list is empty.
+
+## 2026-11-07T02:50:00Z — claude
+Fix 1 — EdgePulse square-sprite bug. src/viz/EdgePulse.ts: replaced PointsMaterial
+with a ShaderMaterial whose fragment shader computes radial distance from
+gl_PointCoord's centre, discards fragments outside the 0.25-radius^2 disc, and
+smooth-steps the alpha from centre to edge. Vertex shader keeps sizeAttenuation
+semantics (uSize * 300/-mv.z). Point size held at 1.4. Visual effect: pulses are
+now soft round beads instead of axis-aligned squares.
+
+## 2026-11-07T02:51:00Z — claude
+Fix 2 — src/app/config.ts: COHERENCE_WAVE_THRESHOLD changed 0.8 → 0.78.
+Rationale left to Geo's own observation (M1 was stabilising near 0.80 on
+average, hovering just under the threshold); 0.78 opens the gate reliably
+without making the wave trivial to trigger.
+
+## 2026-11-07T02:52:00Z — claude
+Fix 3 — src/viz/EdgeLines.ts: dropped LineBasicMaterial.opacity 0.9 → 0.35
+(line 46) and changed the per-edge fade from linear to quadratic:
+`const alpha = Math.pow(1 - age / FADE_MS, 2)` (line 84). Quieter edge mesh
+overall, with a sharper drop-off tail so recent gossip edges stand out against
+the fading backlog.
+
+## 2026-11-07T02:53:00Z — claude
+Verification: `npx tsc --noEmit` clean; `npx vitest run` → 22/22 pass;
+`npx vite build` succeeds. Main bundle 144.18 KB gz (vs 143.46 KB gz at last
+HANDOFF — +0.7 KB for the EdgePulse shader; still well under the 500 KB target).
+No other files touched. CoherenceMetric, NodeMesh, Scene, RTCTransport,
+WebLLMEngine, and all test files are untouched.
+Also had to install @rollup/rollup-linux-x64-gnu into node_modules — the
+previous install only had win32-x64 binaries, which matches the known pattern
+from the M1 session (Windows-side npm install leaves platform-specific
+binaries). Tracked under the existing "fresh-install recovery" steps in
+HANDOFF; no code change needed.

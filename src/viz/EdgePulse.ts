@@ -2,8 +2,14 @@
  * EdgePulse — a short-lived additive sprite travels from source to
  * target on every gossip event. §9.M1.16.
  *
- * Implemented as a single BufferGeometry Points with per-vertex alpha
- * fade. For MAX_PULSES=512 this is cheap.
+ * Implemented as a single BufferGeometry Points with a ShaderMaterial
+ * that computes a radial falloff from gl_PointCoord and discards
+ * fragments outside the disc, so pulses render as soft round beads
+ * rather than axis-aligned square sprites (the default PointsMaterial
+ * was drawing visible squares against the dark background and against
+ * the bloom pass).
+ *
+ * For MAX_PULSES=512 this is cheap.
  */
 
 import {
@@ -12,7 +18,7 @@ import {
   BufferGeometry,
   Color,
   Points,
-  PointsMaterial,
+  ShaderMaterial,
   type Scene
 } from "three";
 import type { NodePosition } from "./NodeMesh.js";
@@ -25,6 +31,35 @@ interface ActivePulse {
 
 const DURATION_MS = 400;
 const MAX_PULSES = 512;
+/** Screen-space point size, matched to the previous PointsMaterial value. */
+const POINT_SIZE = 1.4;
+
+const VERT = /* glsl */ `
+  attribute vec3 color;
+  varying vec3 vColor;
+  uniform float uSize;
+  void main() {
+    vColor = color;
+    vec4 mv = modelViewMatrix * vec4(position, 1.0);
+    // sizeAttenuation=true semantics: size scales with distance.
+    gl_PointSize = uSize * (300.0 / -mv.z);
+    gl_Position = projectionMatrix * mv;
+  }
+`;
+
+const FRAG = /* glsl */ `
+  precision highp float;
+  varying vec3 vColor;
+  void main() {
+    // gl_PointCoord is in [0,1]^2 across the sprite. Centre at (0.5, 0.5).
+    vec2 d = gl_PointCoord - vec2(0.5);
+    float r2 = dot(d, d);
+    if (r2 > 0.25) discard;             // crop to a disc
+    // Smooth radial falloff, bright centre → zero edge.
+    float a = 1.0 - smoothstep(0.0, 0.25, r2);
+    gl_FragColor = vec4(vColor * a, a);
+  }
+`;
 
 export class EdgePulse {
   readonly points: Points;
@@ -43,10 +78,10 @@ export class EdgePulse {
     this.geometry.setAttribute("color", new BufferAttribute(this.colours, 3));
     this.geometry.setDrawRange(0, 0);
 
-    const mat = new PointsMaterial({
-      size: 1.4,
-      sizeAttenuation: true,
-      vertexColors: true,
+    const mat = new ShaderMaterial({
+      vertexShader: VERT,
+      fragmentShader: FRAG,
+      uniforms: { uSize: { value: POINT_SIZE } },
       transparent: true,
       blending: AdditiveBlending,
       depthWrite: false

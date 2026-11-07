@@ -1,9 +1,9 @@
 # Project State
 
-last_updated: 2026-11-06T00:00:00Z
-last_agent: codex
+last_updated: 2026-11-07T02:53:00Z
+last_agent: claude
 current_milestone: M2-M4 preview release
-current_task: release_candidate
+current_task: four-fix patch (EdgePulse disc, wave 0.78, EdgeLines quiet+quadratic)
 status: in_progress
 
 ## Implemented preview paths

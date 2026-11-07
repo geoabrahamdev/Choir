@@ -43,7 +43,7 @@ export class EdgeLines {
     const mat = new LineBasicMaterial({
       vertexColors: true,
       transparent: true,
-      opacity: 0.9,
+      opacity: 0.35,
       blending: AdditiveBlending,
       depthWrite: false
     });
@@ -81,7 +81,7 @@ export class EdgeLines {
       const a = nodes[e.from];
       const b = nodes[e.to];
       if (!a || !b) continue;
-      const alpha = 1 - age / FADE_MS; // linear fade
+      const alpha = Math.pow(1 - age / FADE_MS, 2); // quadratic fade
 
       const base = vertexIdx * 3;
       posArr[base + 0] = a.x;
