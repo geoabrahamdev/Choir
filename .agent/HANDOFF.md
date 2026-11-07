@@ -1,60 +1,86 @@
 # Handoff — Next Session Start Here
 
-last_written: 2026-11-07T02:53:00Z
+last_written: 2026-11-07T03:10:00Z
 last_agent: claude
 
 ## Where we are
-Four narrow visual fixes applied on top of the M2–M4 preview branch, per Geo's
-explicit instruction. M1 remains live at https://geoabrahamdev.github.io/Choir/.
-No milestones advanced; no features added.
+One-line tuning change on top of yesterday's visual-fix merge. The previous
+four-fix patch (EdgePulse disc, EdgeLines quiet quadratic, wave threshold 0.78)
+is already merged to `main` and live. M1 remains live at
+https://geoabrahamdev.github.io/Choir/.
 
 ### What this session changed
-1. `src/viz/EdgePulse.ts` — replaced `PointsMaterial` with a `ShaderMaterial`
-   using `gl_PointCoord` radial falloff + `discard` outside the disc. Pulses
-   now render as soft round beads, not square sprites.
-2. `src/app/config.ts` — `COHERENCE_WAVE_THRESHOLD` lowered 0.8 → 0.78.
-3. `src/viz/EdgeLines.ts` — line 46 opacity 0.9 → 0.35; line 84 fade changed
-   from linear (`1 - age/FADE_MS`) to quadratic (`Math.pow(1 - age/FADE_MS, 2)`).
-4. `.agent/LOG.md` + this file + `STATE.md` updated.
+- `src/app/config.ts` — `BLEND_ALPHA: 0.05 → 0.07`.
+- `.agent/LOG.md` + `STATE.md` + this file updated.
 
-Explicitly **not** touched: `CoherenceMetric.ts`, `NodeMesh.ts` (fresnel shader),
-`Scene.ts` (bloom tuning), any WebLLM or RTCTransport code, every test file.
-All 22 existing tests still pass.
+Nothing else was touched: no viz file, no transport, no inference, no test. All
+22 existing tests still pass.
+
+## Rationale
+With the wave threshold now at 0.78, the swarm needs to reach that band
+reliably in 30–60 s. The old `BLEND_ALPHA=0.05` had the swarm plateauing near
+0.75–0.78 on some seeds; nudging to 0.07 pulls received peer state in faster,
+which should settle the equilibrium in the **76–80 %** band and make the wave
+fire more consistently without destroying the per-agent personality drift.
+
+## Rollback path if the swarm visually collapses
+If BLEND_ALPHA=0.07 makes the swarm converge too aggressively (all nodes pile
+onto one point, the clustering by personality disappears, or coherence pegs at
+100 %), restore some per-agent drift headroom by bumping noise, not by
+lowering the alpha again:
+
+```
+src/app/config.ts:  DRIFT_NOISE: 0.02 → 0.025
+```
+
+That restores the per-agent wobble that keeps the swarm visually alive while
+keeping the faster gossip blend. Do NOT also revert BLEND_ALPHA in the same
+step — change one knob at a time so you can see which one did what.
 
 ## Last successful action
-`npx vitest run` → 22/22 pass. `npx tsc --noEmit` clean. `npx vite build` →
-main 144.18 KB gz (+0.7 KB vs previous for the EdgePulse shader).
+`npx vitest run` → **22 / 22 pass**. (No build or `tsc --noEmit` run this
+session — the only change is a numeric constant inside a typed `as const`
+object, which can't introduce a type error.)
 
 ## What to do next (exact)
 
-**For Geo (the user's stated plan):**
-1. `cd C:\Users\georg\Desktop\SideHustle\github\Choir`
-2. `git add src/viz/EdgePulse.ts src/viz/EdgeLines.ts src/app/config.ts .agent/`
-3. `git commit -m "fix: EdgePulse disc, EdgeLines quiet quadratic fade, wave threshold 0.78"`
-4. `git push` — Geo triggers the Pages deploy himself.
-5. In the live preview after Actions completes: confirm pulses are round beads,
-   edges are visibly quieter with a sharper tail, and the coherence wave fires at
-   least once within ~2 minutes.
+Geo pushes this manually, same pattern as the last patch:
 
-**NOTE on claude-code attribution footer:** This session's system prompt supplies
-attribution lines to end commit messages with. Use them unless your commit style
-says otherwise. They're inside the system-reminder about Attribution.
+```powershell
+cd C:\Users\georg\Desktop\SideHustle\github\Choir
+
+# Should show one modified file + the three .agent/* updates:
+git status --short
+
+# Stage ONLY what this session touched:
+git add src/app/config.ts .agent/LOG.md .agent/STATE.md .agent/HANDOFF.md
+
+git commit -m "tune: BLEND_ALPHA 0.05 -> 0.07 (target equilibrium 76-80%)"
+git push origin main
+```
+
+The `on: push: branches: [main]` trigger in `.github/workflows/deploy.yml`
+kicks off the Pages deploy — Geo controls when by choosing when to push.
+
+Within ~1–2 min of the Action completing, observe the live preview:
+- Coherence should climb into 76–80 % within 30–60 s.
+- The purple wave should fire at least once within the first 2 min.
+- The swarm should still look like a lively cluster, not a single pinpoint.
+
+If any of those three fails: see "Rollback path" above.
 
 ## Blocked / unresolved
-Everything that was open before this fix pass remains open — no change:
-- bootstrap-peers.json still empty (see DECISIONS #5).
-- demo.mp4 (§10.8) not captured.
+Unchanged since the last HANDOFF:
+- `public/bootstrap-peers.json` still empty (DECISIONS #5).
+- `demo.mp4` (§10.8) not captured.
 - RTC/WebRTC + WebLLM paths still lack multi-browser / GPU verification.
 
 ## Environment state next session must know
 - `.agent/` has 4 files; don't re-create.
-- `node_modules` is a real directory in the mount, now including
-  `@rollup/rollup-linux-x64-gnu` (added this session to unblock Linux-VM builds;
-  harmless to leave installed, and `npm ci` on Linux CI already picks the right
-  binary).
-- `public/embeddings/trajectories.bin` (9.58 MiB) unchanged.
-- `dist/` regenerated during verification; gitignored; delete freely.
-- The "2-minute local dev session" validation requested in fix #2 could not be
-  run from the headless Linux VM — the dev server renders a WebGL canvas that
-  this environment cannot visually observe. Left to Geo to verify on the live
-  preview after push.
+- `node_modules` is a real directory in the mount with
+  `@rollup/rollup-linux-x64-gnu` installed for Linux-VM builds.
+- `public/embeddings/trajectories.bin` (9.58 MiB) unchanged — the baked
+  trajectories are drift patterns, independent of `BLEND_ALPHA`, so no re-bake
+  is needed.
+- Visual verification was not done from the Linux VM (no WebGL surface); the
+  76–80 % equilibrium is a predicted range, not a measured one.

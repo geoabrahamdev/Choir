@@ -1,9 +1,9 @@
 # Project State
 
-last_updated: 2026-11-07T02:53:00Z
+last_updated: 2026-11-07T03:10:00Z
 last_agent: claude
 current_milestone: M2-M4 preview release
-current_task: four-fix patch (EdgePulse disc, wave 0.78, EdgeLines quiet+quadratic)
+current_task: BLEND_ALPHA tweak 0.05 → 0.07
 status: in_progress
 
 ## Implemented preview paths

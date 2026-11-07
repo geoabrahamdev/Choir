@@ -128,3 +128,6 @@ previous install only had win32-x64 binaries, which matches the known pattern
 from the M1 session (Windows-side npm install leaves platform-specific
 binaries). Tracked under the existing "fresh-install recovery" steps in
 HANDOFF; no code change needed.
+
+## 2026-11-07T03:10:00Z — claude
+src/app/config.ts: BLEND_ALPHA 0.05 → 0.07. COHERENCE_WAVE_THRESHOLD stays at 0.78, DRIFT_NOISE stays at 0.02. gossip.test.ts sets its own blendAlpha locally; no test change needed. All 22 tests pass. Expected new equilibrium coherence 76–80%.
