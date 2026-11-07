@@ -1,9 +1,9 @@
 # Project State
 
-last_updated: 2026-11-07T03:10:00Z
+last_updated: 2026-11-07T03:35:00Z
 last_agent: claude
 current_milestone: M2-M4 preview release
-current_task: BLEND_ALPHA tweak 0.05 → 0.07
+current_task: README rewrite (beginner→advanced, Mermaid diagrams, honest caveats)
 status: in_progress
 
 ## Implemented preview paths

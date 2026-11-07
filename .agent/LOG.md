@@ -131,3 +131,13 @@ HANDOFF; no code change needed.
 
 ## 2026-11-07T03:10:00Z — claude
 src/app/config.ts: BLEND_ALPHA 0.05 → 0.07. COHERENCE_WAVE_THRESHOLD stays at 0.78, DRIFT_NOISE stays at 0.02. gossip.test.ts sets its own blendAlpha locally; no test change needed. All 22 tests pass. Expected new equilibrium coherence 76–80%.
+
+## 2026-11-07T03:35:00Z — claude
+README.md rewritten end to end: 420 lines, structured as beginner → advanced.
+Sections: what-am-I-looking-at, 60-second mental model, two Mermaid diagrams
+(architecture overview + rendering pipeline), code tour, deep dives on gossip
+protocol / coherence / transports+inference engines, rendering pipeline, local
+dev, tuning-knob table, tech stack, roadmap, and an honest "known limitations"
+section that documents the coherence-ceiling / BLEND_ALPHA misdiagnosis so
+future readers don't repeat it. Forbidden-word scan passes (only the required
+disclaimer paragraph contains them).
