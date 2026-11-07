@@ -27,7 +27,6 @@ Choir visualises what a toy gossip protocol *looks like* when ~150 tiny software
 - [Running Choir locally](#running-choir-locally)
 - [Tuning knobs](#tuning-knobs)
 - [Tech stack](#tech-stack)
-- [Roadmap](#roadmap)
 - [Known limitations and honest caveats](#known-limitations-and-honest-caveats)
 - [Contributing](#contributing)
 - [License](#license)
@@ -386,15 +385,6 @@ The whole cold-start payload for a first-time visitor in default mode is **under
 
 ---
 
-## Roadmap
-
-- **M1** — single-tab swarm with faked latent states. ✅ live
-- **M2** — visual polish: fresnel shader, starfield, auto-orbit, bloom tune, 1.2 s ease-out coherence wave. ✅ live
-- **M3** — real peer-to-peer over WebRTC with a Local/Live toggle, bootstrap discovery, graceful signaling fallback. ✅ code live; multi-browser verification pending
-- **M4** *(optional, opt-in)* — real LLM inference in the browser via `@mlc-ai/web-llm`, gated behind WebGPU + ~500 MB model download. ✅ code live; GPU verification pending
-
----
-
 ## Known limitations and honest caveats
 
 This section is kept deliberately blunt because the project is in preview.
@@ -402,16 +392,16 @@ This section is kept deliberately blunt because the project is in preview.
 - **`bootstrap-peers.json` ships empty.** The first visitor in live mode has no one to dial. A real deployment needs either a seed peer id committed to the file, a tiny Cloudflare Worker running `peerjs-server`, or a GitHub Action that keeps the seed list warm.
 - **The coherence ceiling is a design property, not a bug.** With `CLUSTER_COUNT=6`, the global coherence plateaus around 0.72–0.75. Raising `BLEND_ALPHA` does not lift this ceiling — it is set by the shape of the baked trajectories. The two knobs that actually raise it are `CLUSTER_COUNT` (lower it) or changing `Swarm.tick()` to blend the trajectory into the current latent instead of replacing it.
 - **The 0.78 wave threshold is aspirational on the current bake.** If the swarm equilibrium sits at ~0.73, the wave will fire rarely or never. Lower the threshold to the actual equilibrium plus some headroom, *or* reduce `CLUSTER_COUNT` to raise the equilibrium. Tune one knob at a time.
-- **M3 convergence across two real devices has not been verified.** The `PeerTransport` interface is unit-tested via `LocalTransport`, but WebRTC-specific paths (dial failure, NAT traversal, signaling timeout) need two browsers on different networks.
-- **M4 real-LLM dynamics have not been observed on a GPU laptop** by the project owner. The code path pre-flights WebGPU + cross-origin isolation and falls back cleanly, but the "qualitatively different dynamics" promise is unproven.
-- **No `demo.mp4`.** M2.8 asked for a short screen capture committed to the repo. Not done yet.
+- **Cross-device peer-to-peer convergence has not been verified.** The `PeerTransport` interface is unit-tested via `LocalTransport`, but WebRTC-specific paths (dial failure, NAT traversal, signaling timeout) need two browsers on different networks.
+- **Real-LLM dynamics under WebLLM have not been observed on a GPU-capable machine.** The code path pre-flights WebGPU + cross-origin isolation and falls back cleanly, but the "qualitatively different dynamics" promise is unproven.
+- **No `demo.mp4`.** A short screen capture has not been committed to the repo yet.
 - **Choir is a visual metaphor.** It is tempting to read deeper meaning into emergent coherence; please don't. See the disclaimer above.
 
 ---
 
 ## Contributing
 
-This is Geo's personal hobby project. Issues and small PRs are welcome but nothing is guaranteed. The `.agent/` directory in the repo documents the handoff protocol used when AI assistants are helping with the code — if you are a human contributor, you can ignore it.
+Choir is a side project with no guarantees of maintenance. Issues and small PRs are welcome.
 
 ---
 

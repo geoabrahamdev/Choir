@@ -147,3 +147,17 @@ README.md TOC: removed the "— beginner" / "— intermediate" / "— advanced"
 tags on the section links. They were internal structuring notes that leaked
 into the reader-facing document. Remaining "advanced" references are all the
 legitimate "Advanced mode" / AdvancedPanel product term for the WebLLM opt-in.
+
+## 2026-11-07T03:55:00Z — claude
+README.md scrubbed of personal / internal references:
+- "Geo's personal hobby project" → generic "Choir is a side project with no
+  guarantees of maintenance"
+- The entire "Roadmap" section (M1-M4 bullets + TOC entry) removed — the user
+  flagged the milestone labelling as internal, not for publication.
+- Known-Limitations bullets referencing "M2.8", "M3 convergence", "M4 real-LLM
+  dynamics", and "the project owner" rewritten to describe the limitation
+  without the milestone label or ownership framing.
+- Left in place: the GitHub Pages URL `geoabrahamdev.github.io/Choir/` (live
+  demo link + clone URL) — it's a technical GitHub identifier embedded in the
+  Pages URL and can't be removed without breaking the live link / clone
+  instructions. Flagged to Geo in chat.
