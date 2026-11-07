@@ -16,13 +16,13 @@ Choir visualises what a toy gossip protocol *looks like* when ~150 tiny software
 
 ## Table of contents
 
-- [What am I looking at?](#what-am-i-looking-at) — pure beginner
-- [The 60-second mental model](#the-60-second-mental-model) — beginner
-- [Architecture at a glance](#architecture-at-a-glance) — with diagram
-- [How the pieces fit — a code tour](#how-the-pieces-fit--a-code-tour) — intermediate
-- [Deep dive: the gossip protocol](#deep-dive-the-gossip-protocol) — advanced
-- [Deep dive: coherence and the wave](#deep-dive-coherence-and-the-wave) — advanced
-- [Deep dive: the three transports and two inference engines](#deep-dive-the-three-transports-and-two-inference-engines) — advanced
+- [What am I looking at?](#what-am-i-looking-at)
+- [The 60-second mental model](#the-60-second-mental-model)
+- [Architecture at a glance](#architecture-at-a-glance)
+- [How the pieces fit — a code tour](#how-the-pieces-fit--a-code-tour)
+- [Deep dive: the gossip protocol](#deep-dive-the-gossip-protocol)
+- [Deep dive: coherence and the wave](#deep-dive-coherence-and-the-wave)
+- [Deep dive: the three transports and two inference engines](#deep-dive-the-three-transports-and-two-inference-engines)
 - [Rendering pipeline](#rendering-pipeline)
 - [Running Choir locally](#running-choir-locally)
 - [Tuning knobs](#tuning-knobs)

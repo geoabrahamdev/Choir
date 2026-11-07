@@ -141,3 +141,9 @@ dev, tuning-knob table, tech stack, roadmap, and an honest "known limitations"
 section that documents the coherence-ceiling / BLEND_ALPHA misdiagnosis so
 future readers don't repeat it. Forbidden-word scan passes (only the required
 disclaimer paragraph contains them).
+
+## 2026-11-07T03:45:00Z — claude
+README.md TOC: removed the "— beginner" / "— intermediate" / "— advanced"
+tags on the section links. They were internal structuring notes that leaked
+into the reader-facing document. Remaining "advanced" references are all the
+legitimate "Advanced mode" / AdvancedPanel product term for the WebLLM opt-in.
